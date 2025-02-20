@@ -1,0 +1,34 @@
+- hosts: master
+  become: true
+  roles:
+    - role: k8s_node_common
+
+- hosts: agent
+  become: true
+  roles:
+    - role: k8s_node_common
+
+- hosts: master
+  become: true
+  roles:
+    - role: microk8s
+      vars:
+        microk8s_version: "1.31/stable"
+        kubeapi_loadbalancer_fqdn: "k8sapi.home.cloudlabske.io"
+        microk8s_dns_resolvers: 192.168.1.1
+        teardown: false
+        microk8s_dev_skip: false
+        dev_skip: false
+        microk8s_enable_ha: true
+        microk8s_group_ha: "master"
+        microk8s_group_workers: "agent"
+        add_workers_to_hostfile: true
+
+- hosts: agent
+  become: true
+  roles:
+    - role: microk8s
+      vars:
+        microk8s_enable_ha: true
+        microk8s_group_ha: "master"
+        microk8s_group_workers: "agent"

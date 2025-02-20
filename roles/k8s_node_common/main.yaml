@@ -1,0 +1,31 @@
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Update package list index
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install basic packages
+  ansible.builtin.apt:
+    name:
+      - wget
+      - curl
+      - bash-completion
+    state: latest
+
+- name: Configure multipathd to ignore longhorn volumes
+  blockinfile:
+    path: /etc/multipath.conf
+    block: |
+      blacklist {
+        devnode "^sd[a-z0-9]+"
+      }
+  register: multipathconf
+  when: "'multipath-tools' in ansible_facts.packages"
+
+- name: Restart multipathd
+  ansible.builtin.service:
+    name: multipathd
+    state: restarted
+  when: "'multipath-tools' in ansible_facts.packages and multipathconf.changed"

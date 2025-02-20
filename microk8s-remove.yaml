@@ -1,0 +1,15 @@
+- hosts: agent
+  become: true
+  vars:
+    enable_rook_disk_reset: true
+    teardown: true
+  roles:
+    - role: microk8s
+
+- hosts: master
+  become: true
+  vars:
+    enable_rook_disk_reset: true
+    teardown: true
+  roles:
+    - role: microk8s
