@@ -14,8 +14,8 @@
     - role: microk8s
       vars:
         microk8s_version: "1.31/stable"
-        kubeapi_loadbalancer_fqdn: "k8sapi.home.cloudlabske.io"
-        microk8s_dns_resolvers: 192.168.1.1
+        kubeapi_loadbalancer_fqdn: "k8sapi.example.com"
+        microk8s_dns_resolvers: 8.8.8.8
         teardown: false
         microk8s_dev_skip: false
         dev_skip: false
